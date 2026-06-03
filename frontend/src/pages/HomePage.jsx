@@ -67,6 +67,10 @@ function HomePage() {
                 Book Catalog
             </h1>
 
+            <p className="books-count">
+                📚 Total Books: {books.length}
+            </p>
+
             <input
                 type="text"
                 placeholder="Search by title or author..."
@@ -91,16 +95,32 @@ function HomePage() {
                 </option>
             </select>
 
-            <div className="books-grid">
+            {filteredBooks.length === 0 ? (
 
-                {filteredBooks.map((book) => (
-                    <BookCard
-                        key={book.id}
-                        book={book}
-                    />
-                ))}
+                <div className="empty-state">
 
-            </div>
+                    <h2>No books found</h2>
+
+                    <p>
+                        Try another title or author.
+                    </p>
+
+                </div>
+
+            ) : (
+
+                <div className="books-grid">
+
+                    {filteredBooks.map((book) => (
+                        <BookCard
+                            key={book.id}
+                            book={book}
+                        />
+                    ))}
+
+                </div>
+
+            )}
 
         </div>
     );

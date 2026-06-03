@@ -1,6 +1,5 @@
 const API_URL =
-'https://projekt-77427-77372.onrender.com/api/books';
-
+    'https://projekt-77427-77372.onrender.com/api/books';
 
 export async function getBooks() {
   const response = await fetch(API_URL);
@@ -29,10 +28,10 @@ export async function createBook(bookData) {
 
   return response.json();
 }
-export async function getBookById(id) {
 
+export async function getBookById(id) {
   const response = await fetch(
-    `${API_URL}/${id}`
+      `${API_URL}/${id}`
   );
 
   const data = await response.json();
