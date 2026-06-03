@@ -1,0 +1,40 @@
+const API_URL = 'http://localhost:3000/api/books';
+
+
+export async function getBooks() {
+  const response = await fetch(API_URL);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch books');
+  }
+
+  return response.json();
+}
+
+export async function createBook(bookData) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+    body: JSON.stringify(bookData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create book');
+  }
+
+  return response.json();
+}
+export async function getBookById(id) {
+
+  const response = await fetch(
+    `${API_URL}/${id}`
+  );
+
+  const data = await response.json();
+
+  return data;
+}

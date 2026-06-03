@@ -161,4 +161,44 @@ router.post("/", (req, res, next) => {
   }
 });
 
+// ----------------------------------------------------------------
+// DELETE /api/books/:id
+// Deletes a book by ID.
+// ----------------------------------------------------------------
+router.delete("/:id", (req, res, next) => {
+  try {
+    const db = getDb();
+    const { id } = req.params;
+
+    const numericId = parseInt(id, 10);
+
+    if (isNaN(numericId) || numericId < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid book ID.",
+      });
+    }
+
+    const result = db
+        .prepare("DELETE FROM Books WHERE id = ?")
+        .run(numericId);
+
+    if (result.changes === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Book deleted successfully.",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 module.exports = router;

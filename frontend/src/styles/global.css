@@ -1,0 +1,320 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #181818;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+
+.navbar {
+  background-color: #1f1f1f;
+
+  padding: 20px 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 1px solid #333;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 100;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #dddddd;
+  text-decoration: none;
+
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+.page-title {
+  margin-bottom: 30px;
+
+  font-size: 40px;
+}
+
+.book-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  max-width: 600px;
+}
+
+.book-form input,
+.book-form textarea {
+  background-color: #222;
+
+  border: 1px solid #333;
+
+  color: white;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+}
+
+.book-form button {
+  background-color: white;
+
+  color: black;
+
+  border: none;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  transition: 0.3s;
+}
+
+.book-form button:hover {
+  opacity: 0.8;
+}
+
+.books-grid {
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, 1fr)
+  );
+
+  gap: 20px;
+}
+
+.book-card {
+  background-color: #1f1f1f;
+
+  padding: 25px;
+
+  border-radius: 15px;
+
+  border: 1px solid #333;
+
+  transition: 0.3s;
+
+  text-decoration: none;
+
+  color: white;
+
+  min-height: 220px;
+}
+
+.book-card:hover {
+  transform: translateY(-8px);
+
+  border-color: white;
+
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.book-card h2 {
+  margin-bottom: 12px;
+
+  font-size: 24px;
+}
+
+.book-author {
+  color: #bbbbbb;
+
+  margin-bottom: 15px;
+}
+
+.book-description {
+  color: #dddddd;
+
+  line-height: 1.6;
+}
+.delete-button {
+  margin-top: 20px;
+
+  padding: 12px 20px;
+
+  background-color: #dc3545;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.delete-button:hover {
+  opacity: 0.8;
+}
+.author-card {
+  background-color: #1f1f1f;
+
+  padding: 25px;
+
+  margin-bottom: 20px;
+
+  border-radius: 15px;
+
+  border: 1px solid #333;
+
+  transition: 0.3s;
+}
+
+.author-card:hover {
+  transform: translateY(-5px);
+
+  border-color: white;
+}
+
+.author-card h2 {
+  margin-bottom: 10px;
+}
+
+.author-card p {
+  color: #bbbbbb;
+}
+.book-details {
+  background-color: #1f1f1f;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  border: 1px solid #333;
+}
+
+.search-input {
+  width: 100%;
+
+  max-width: 500px;
+
+  padding: 15px;
+
+  margin-bottom: 30px;
+
+  border-radius: 10px;
+
+  border: 1px solid #333;
+
+  background-color: #222;
+
+  color: white;
+
+  font-size: 16px;
+}
+
+.search-input:focus {
+  outline: none;
+
+  border-color: white;
+}
+.sort-select {
+  padding: 15px;
+
+  margin-left: 15px;
+
+  margin-bottom: 30px;
+
+  border-radius: 10px;
+
+  border: 1px solid #333;
+
+  background-color: #222;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+}
+.book-read-more {
+  margin-top: 20px;
+
+  color: white;
+
+  font-weight: bold;
+
+  opacity: 0.8;
+
+  transition: 0.3s;
+}
+
+.book-card:hover .book-read-more {
+  opacity: 1;
+}
+
+.book-card {
+  display: block;
+
+  text-decoration: none;
+
+  color: white;
+
+  min-height: 260px;
+}
+
+.book-description {
+  line-height: 1.7;
+
+  color: #dddddd;
+}
+
+.success-message {
+  background-color: #1d4d2d;
+
+  color: #8cffb3;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background-color: #4d1d1d;
+
+  color: #ff9d9d;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  margin-bottom: 20px;
+}
