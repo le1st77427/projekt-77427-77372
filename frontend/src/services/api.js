@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:3000/api/books';
+const API_URL =
+'https://projekt-77427-77372.onrender.com/api/books';
 
 
 export async function getBooks() {
