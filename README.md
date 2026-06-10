@@ -30,41 +30,40 @@ Praca nad projektem pozwoliła mi lepiej poznać React, React Router, pracę z R
 Udział w projekcie pozwolił mi zdobyć praktyczne doświadczenie w tworzeniu nowoczesnych aplikacji webowych. Dzięki współpracy z partnerem udało się stworzyć funkcjonalną aplikację do zarządzania i przeglądania książek.
 
 
+📚 Raport z realizacji projektu ReaderHub
+
+
+Niniejszy dokument stanowi podsumowanie mojego wkładu w rozwój aplikacji BookVerse, realizowanej we współpracy z Igorem, odpowiedzialnym za warstwę frontendową. Moje zadania skupiały się na architekturze backendowej (Node.js/Express), zarządzaniu bazą danych (SQLite), wdrażaniu aplikacji na środowisko produkcyjne (Render) oraz nadzorze nad spójnością repozytorium Git.
+
+🛠 Zakres zrealizowanych zadań
+Projektowanie i adaptacja API: Opracowałem logikę serwerową, zapewniając elastyczność i kompatybilność odpowiedzi API z wymaganiami komponentów React.
+
+Konfiguracja środowiska produkcyjnego (Deploy): Wdrożyłem aplikację na platformę Render, gwarantując jej stabilną i ciągłą dostępność w sieci.
+
+Integracja Express.js z React Router: Skonfigurowałem routing po stronie serwera, umożliwiając bezbłędne działanie aplikacji typu Single Page Application (SPA), eliminując błędy nawigacji przy odświeżaniu strony.
+
+Zarządzanie systemem kontroli wersji (Git): Koordynowałem proces scalania gałęzi (merge), skutecznie rozwiązując konflikty plików konfiguracyjnych i systemowych.
+
+Zarządzanie relacyjną bazą danych: Odpowiadałem za architekturę SQLite, optymalizację zapytań, realizację migracji tabel oraz synchronizację środowiska lokalnego z produkcyjnym.
 
 
 
-Cześć! To mój raport z tego, jak razem z Igorem (moim partnerem od frontendu) poskładaliśmy ten projekt w całość. To było niezłe wyzwanie, w którym odpowiadałem za backend (Node.js/Express), bazę danych SQLite, wdrożenie (deploy) na platformę Render, a także za to, żeby nasze gałęzie w Git w końcu się dogadały i projekt zadziałał jako jedna spójna aplikacja.
 
-🛠 Co dokładnie zrobiłem
-Zaprojektowałem i dostosowałem API: Napisałem logikę serwera i elastycznie dopasowywałem odpowiedzi z backendu do tego, czego akurat potrzebował nasz React.
+🤯 Rozwiązane problemy architektoniczne
+1. Niespójność formatów danych (Obiekty vs Tablice)
+Początkowo API zostało zaprojektowane zgodnie z dobrymi praktykami REST, zwracając dane w strukturyzowanych obiektach (np. { sukces: true, dane: [...] }). Aplikacja kliencka oczekiwała jednak czystych tablic, co prowadziło do błędu Uncaught TypeError: e.filter is not a function. Aby uniknąć konieczności głębokiego refaktoryzowania kodu frontendowego, zmodyfikowałem formatowanie odpowiedzi po stronie serwera, dostosowując je bezpośrednio do wymagań interfejsu.
 
-Skonfigurowałem deploy: Wdrożyłem nasz serwer na platformę Render, zapewniając jego stabilne działanie w sieci.
+2. Konflikty systemu Git z plikami tymczasowymi SQLite
+Podczas synchronizacji repozytorium (git pull), proces scalania był trwale blokowany przez automatycznie generowane pliki dziennika bazy danych (database.sqlite-shm i -wal). Rozwiązanie wymagało tymczasowego odłożenia modyfikacji (git stash) oraz wymuszonego usunięcia procesów blokujących za pomocą powłoki PowerShell (Remove-Item -Force), co umożliwiło bezpieczną aktualizację bazy kodu.
 
-Połączyłem Express i React Router: Rozwiązałem problem routingu na serwerze, żeby frontend mógł bez problemu działać jako Single Page Application (brak błędów przy odświeżaniu strony).
+3. Tymczasowe wyłączenie warstwy autoryzacji JWT (Zarządzanie endpointami)
+Zaimplementowałem kompletny system zabezpieczeń oparty na tokenach JWT oraz middleware weryfikujący role użytkowników. Serwer funkcjonował poprawnie, odrzucając nieautoryzowane żądania błędem 401 Unauthorized. Ze względu na opóźnienia w implementacji formularzy logowania po stronie klienta, podjąłem decyzję o kontrolowanym rollbacku architektonicznym. Usunąłem zabezpieczenia endpointów w plikach konfiguracyjnych i zmieniłem logikę kontrolerów tak, by API tymczasowo przetwarzało operacje CRUD jako żądania publiczne, co umożliwiło sprawne przetestowanie wersji MVP przed terminem oddania projektu.
 
-Rozwiązywałem konflikty w Git: Koordynowałem scalanie kodu (merge), ogarniałem zablokowane pliki bazy danych i synchronizowałem nasze środowiska pracy.
+4. Konfiguracja routingu Express dla SPA (Błąd "Cannot GET")
+Po wdrożeniu na środowisko produkcyjne (Render), serwer Node.js nie potrafił poprawnie obsłużyć bezpośrednich zapytań HTTP kierowanych pod adresy klienckie (np. /add-book), zwracając błąd 404. Problem ten rozwiązałem poprzez wdrożenie reguły typu "catch-all" (app.get("*", ...)). Dzięki temu backend przekierowuje nierozpoznane żądania do głównego pliku index.html, oddając pełną kontrolę nad routingiem aplikacji frontendowej.
 
-Zarządzałem bazą danych: Odpowiadałem za architekturę SQLite, przeprowadzałem migracje tabel i synchronizowałem dane lokalne z bazą produkcyjną.
-
-😌 Co było najprostsze
-Najprostsze okazało się napisanie bazowego szkieletu serwera i podstawowych operacji CRUD dla książek. Logika dodawania, odczytu, usuwania i aktualizacji danych w SQLite za pomocą pakietu better-sqlite3 działała jak w zegarku od samego początku. Stworzenie bazy i jej podłączenie było najbardziej zrozumiałą i najszybszą częścią pracy, która dała nam świetny start.
-
-🤯 Z czym były problemy (i jak je rozwiązałem)
-1. Wojna formatów (Obiekty vs Tablice)
-Na początku skonfigurowałem backend "profesjonalnie": API zwracało odpowiedzi owinięte w obiekt { sukces: true, dane: [...] }. Okazało się jednak, że frontend Igora oczekiwał czystej tablicy i od razu odpalał na niej metodę .filter(). Przez to React wywalał błąd Uncaught TypeError: e.filter is not a function. Zamiast zmuszać Igora do przepisywania całego frontendu, po prostu dostosowałem format API i cofnąłem go do zwracania czystych tablic.
-
-2. Konflikty Git z plikami tymczasowymi SQLite
-Kiedy próbowałem pobrać kod Igora (git pull), Git twardo blokował scalanie. Powód? Tymczasowe pliki systemowe bazy danych (database.sqlite-shm i -wal), które tworzyły się automatycznie. Musiałem ukryć moje lokalne zmiany przez git stash, wymusić usunięcie tych plików w konsoli PowerShell (Remove-Item -Force) i dopiero wtedy bezpiecznie pobrać aktualizacje.
-
-3. Tymczasowe usunięcie warstwy JWT (Zarządzanie endpointami)
-Zbudowałem pełny system autoryzacji na backendzie: generowanie tokenów JWT, haszowanie haseł w bazie oraz middleware weryfikujący role (admin/user). Serwer działał zgodnie z założeniami i bezwzględnie blokował niezabezpieczone żądania HTTP błędem 401 Unauthorized. Żeby jednak nie zablokować testowania MVP przed zbliżającym się deadlinem, podjąłem decyzję o kontrolowanym rollbacku architektonicznym. Przebudowałem pliki server.js, books.js oraz schemat SQLite, zdejmując middleware weryfikujące z endpointów API. Zmieniłem logikę kontrolerów tak, by API tymczasowo obsługiwało wszystkie operacje CRUD jako publiczne.
-
-4. Konfiguracja routingu Express dla aplikacji SPA (Błąd "Cannot GET")
-Po wdrożeniu na serwer Render, środowisko produkcyjne Node.js nie potrafiło poprawnie obsłużyć bezpośrednich zapytań o ścieżki, które nie należały do API (np. /add-book). Wynikało to z faktu, że Express oczekiwał konkretnych endpointów i zwracał błąd 404. Naprawiłem to na poziomie logiki serwera, implementując tzw. "catch-all route" (app.get("*", ...)). Dzięki temu backend przechwytuje teraz każde nierozpoznane żądanie HTTP i prawidłowo serwuje plik wejściowy, zamiast wyrzucać błąd braku endpointu.
-
-5. Zarządzanie migracjami SQLite (Rozstrzał między środowiskami)
-Zauważyłem, że API na środowisku produkcyjnym ignorowało zapisywanie jednej z wartości przy tworzeniu nowych zasobów. Po analizie backendu zdiagnozowałem problem z niespójnością schematów bazy danych: plik database.sqlite działający na Renderze posiadał przestarzałą architekturę tabel (brakowało kolumny category), podczas gdy u mnie na localhoście migracja struktury DDL już dawno się wykonała. Naprawiłem to, wymuszając aktualizację schematu bazy bezpośrednio na serwerze produkcyjnym, dzięki czemu środowiska zostały zsynchronizowane.
+5. Utrzymanie spójności migracji SQLite między środowiskami
+Zaobserwowałem, że API na środowisku produkcyjnym nie zapisywało danych w polu nowej kategorii. Analiza wykazała niespójność schematów bazy danych: plik z bazą na serwerze Render nie posiadał najnowszej migracji DDL (brak kolumny category), która została już wdrożona na środowisku lokalnym. Rozwiązałem ten problem, wymuszając aktualizację schematu strukturalnego bezpośrednio na maszynie produkcyjnej, przywracając pełną zgodność środowisk.
 
 🎯 Podsumowanie
-To było niesamowicie pouczające doświadczenie. Najważniejsza lekcja, jaką wyciągnąłem: czasami dla sukcesu projektu o wiele lepiej jest zrezygnować ze skomplikowanej funkcji (jak autoryzacja JWT), aby dowieźć w 100% działający produkt, niż mieć masę idealnego kodu serwerowego, który całkowicie blokuje pracę frontendu. Znaleźliśmy świetny kompromis, pokonaliśmy problemy z synchronizacją, a nasza aplikacja działa teraz szybko i stabilnie!
-
+Realizacja tego projektu była wysoce wartościowym doświadczeniem inżynierskim. Kluczowym wnioskiem z procesu wytwórczego jest zrozumienie, że z perspektywy dostarczenia produktu (MVP), racjonalnym krokiem jest elastyczna rezygnacja z zaawansowanych funkcjonalności (jak autoryzacja JWT) na rzecz stabilnego i w pełni zintegrowanego systemu. Osiągnięty kompromis oraz systematyczne rozwiązywanie problemów synchronizacyjnych pozwoliły na dostarczenie wydajnej, spójnej i poprawnie działającej aplikacji.
