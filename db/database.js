@@ -4,11 +4,10 @@
  * Połączenie z bazą SQLite oraz inicjalizacja schematu.
  *
  * Etapy:
- *   Etap 1 – tabela Books
- *   Etap 3 – kolumna category (migracja ADD COLUMN)
- *   Etap 4 – tabela comments
- *   Etap 5 – tabela ratings
- *   Etap 6 – tabela users  ← NOWE
+ * Etap 1 – tabela Books
+ * Etap 3 – kolumna category (migracja ADD COLUMN)
+ * Etap 4 – tabela comments
+ * Etap 5 – tabela ratings
  * ─────────────────────────────────────────────────────────────────
  */
 
@@ -51,51 +50,37 @@ function _createTables() {
   // Etap 1 — Books (category dodawana migracją)
   db.exec(`
     CREATE TABLE IF NOT EXISTS Books (
-      id          INTEGER PRIMARY KEY AUTOINCREMENT,
-      title       TEXT    NOT NULL,
-      description TEXT    NOT NULL,
-      author      TEXT    NOT NULL,
-      created_at  TEXT    NOT NULL
-                  DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-    )
+                                       id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                                       title       TEXT    NOT NULL,
+                                       description TEXT    NOT NULL,
+                                       author      TEXT    NOT NULL,
+                                       created_at  TEXT    NOT NULL
+                                       DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+      )
   `);
 
   // Etap 4 — comments
   db.exec(`
     CREATE TABLE IF NOT EXISTS comments (
-      id          INTEGER PRIMARY KEY AUTOINCREMENT,
-      book_id     INTEGER NOT NULL
-                  REFERENCES Books(id) ON DELETE CASCADE,
+                                          id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                                          book_id     INTEGER NOT NULL
+                                          REFERENCES Books(id) ON DELETE CASCADE,
       author_name TEXT    NOT NULL,
       content     TEXT    NOT NULL,
       created_at  TEXT    NOT NULL
-                  DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-    )
+      DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+      )
   `);
 
   // Etap 5 — ratings
   db.exec(`
     CREATE TABLE IF NOT EXISTS ratings (
-      id      INTEGER PRIMARY KEY AUTOINCREMENT,
-      book_id INTEGER NOT NULL
-              REFERENCES Books(id) ON DELETE CASCADE,
+                                         id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                                         book_id INTEGER NOT NULL
+                                         REFERENCES Books(id) ON DELETE CASCADE,
       rating  INTEGER NOT NULL
-              CHECK (rating >= 1 AND rating <= 5)
-    )
-  `);
-
-  // Etap 6 — users
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id            INTEGER PRIMARY KEY AUTOINCREMENT,
-      username      TEXT    NOT NULL UNIQUE,
-      email         TEXT    NOT NULL UNIQUE,
-      password_hash TEXT    NOT NULL,
-      role          TEXT    NOT NULL DEFAULT 'user'
-                    CHECK (role IN ('user', 'admin')),
-      created_at    TEXT    NOT NULL
-                    DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-    )
+      CHECK (rating >= 1 AND rating <= 5)
+      )
   `);
 }
 
@@ -110,7 +95,7 @@ function _runMigrations() {
   if (!hasCategory) {
     db.exec(`
       ALTER TABLE Books
-      ADD COLUMN category TEXT NOT NULL DEFAULT 'Bez kategorii'
+        ADD COLUMN category TEXT NOT NULL DEFAULT 'Bez kategorii'
     `);
     console.log("[DB] Migracja: dodano kolumnę 'category' do tabeli Books.");
   }
@@ -123,7 +108,7 @@ function _runMigrations() {
 function getDb() {
   if (!db) {
     throw new Error(
-      "[DB] Baza danych nie została zainicjalizowana. Wywołaj najpierw initDatabase()."
+        "[DB] Baza danych nie została zainicjalizowana. Wywołaj najpierw initDatabase()."
     );
   }
   return db;

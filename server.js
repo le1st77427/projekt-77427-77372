@@ -4,17 +4,16 @@
  * Punkt wejścia aplikacji REST API — Katalog Książek.
  *
  * Zmienne środowiskowe (utwórz plik .env w katalogu głównym):
- *   PORT        – numer portu (domyślnie: 3000)
- *   NODE_ENV    – 'development' | 'production' (domyślnie: 'development')
- *   JWT_SECRET  – sekret do podpisywania tokenów JWT  ← WYMAGANE w prod
+ * PORT        – numer portu (domyślnie: 3000)
+ * NODE_ENV    – 'development' | 'production' (domyślnie: 'development')
  *
  * Kolejność startowa:
- *   1. Wczytaj zmienne środowiskowe
- *   2. Inicjalizuj bazę danych + schemat
- *   3. Skonfiguruj middleware Express
- *   4. Zamontuj routery
- *   5. Globalny handler błędów
- *   6. Uruchom nasłuchiwanie
+ * 1. Wczytaj zmienne środowiskowe
+ * 2. Inicjalizuj bazę danych + schemat
+ * 3. Skonfiguruj middleware Express
+ * 4. Zamontuj routery
+ * 5. Globalny handler błędów
+ * 6. Uruchom nasłuchiwanie
  * ─────────────────────────────────────────────────────────────────
  */
 
@@ -26,7 +25,6 @@ const path     = require("path");
 
 const { initDatabase } = require("./db/database");
 const booksRouter      = require("./routes/books");
-const authRouter       = require("./routes/auth");       // ← Etap 6
 
 // ─────────────────────────────────────────────────────────────────
 // Konfiguracja
@@ -48,8 +46,6 @@ initDatabase();
 const app = express();
 
 // CORS — zezwól na żądania z dowolnego origin (dev)
-// W produkcji ogranicz do konkretnej domeny frontendu:
-//   app.use(cors({ origin: "https://twoja-domena.pl" }));
 app.use(cors());
 
 // Parsowanie JSON
@@ -63,7 +59,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // ─────────────────────────────────────────────────────────────────
 
 app.use("/api/books", booksRouter);
-app.use("/api/auth",  authRouter);   // ← Etap 6: rejestracja i logowanie
 
 // Fallback dla nieistniejących tras API
 app.use("/api/*", (_req, res) => {
@@ -83,9 +78,9 @@ app.use((err, _req, res, _next) => {
 
   const statusCode = err.statusCode || 500;
   const komunikat  =
-    NODE_ENV === "production"
-      ? "Wystąpił nieoczekiwany błąd serwera."
-      : err.message;
+      NODE_ENV === "production"
+          ? "Wystąpił nieoczekiwany błąd serwera."
+          : err.message;
 
   res.status(statusCode).json({
     sukces: false,
@@ -100,11 +95,10 @@ app.use((err, _req, res, _next) => {
 
 app.listen(PORT, () => {
   console.log("─────────────────────────────────────────────────────");
-  console.log("  📚  Katalog Książek API  —  Etap 6: Autoryzacja");
+  console.log("  📚  Katalog Książek API — MVP (Kategorie i Oceny)");
   console.log("─────────────────────────────────────────────────────");
   console.log(`  🌍  Środowisko  : ${NODE_ENV}`);
   console.log(`  🚀  Serwer      : http://localhost:${PORT}`);
-  console.log(`  🔑  Auth API    : http://localhost:${PORT}/api/auth`);
   console.log(`  📖  Books API   : http://localhost:${PORT}/api/books`);
   console.log("─────────────────────────────────────────────────────");
 });
