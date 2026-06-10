@@ -47,3 +47,46 @@ export async function getCategories() {
 
   return response.json();
 }
+
+export async function getComments(bookId) {
+  const response = await fetch(`${API_URL}/${bookId}/comments`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch comments');
+  }
+
+  return response.json();
+}
+
+
+export async function createComment(bookId, commentData) {
+  const response = await fetch(`${API_URL}/${bookId}/comments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(commentData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create comment');
+  }
+
+  return response.json();
+}
+
+export async function addRating(bookId, ratingValue) {
+  const response = await fetch(`${API_URL}/${bookId}/rating`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ rating: ratingValue }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to submit rating');
+  }
+
+  return response.json();
+}
