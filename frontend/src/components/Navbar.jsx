@@ -5,7 +5,7 @@ function Navbar() {
         <nav className="navbar">
 
             <div className="logo">
-                BookShelf
+                ReaderHub
             </div>
 
             <div className="nav-links">
