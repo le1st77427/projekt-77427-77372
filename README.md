@@ -30,12 +30,12 @@ Praca nad projektem pozwoliła mi lepiej poznać React, React Router, pracę z R
 Udział w projekcie pozwolił mi zdobyć praktyczne doświadczenie w tworzeniu nowoczesnych aplikacji webowych. Dzięki współpracy z partnerem udało się stworzyć funkcjonalną aplikację do zarządzania i przeglądania książek.
 
 
-📚 Raport z realizacji projektu ReaderHub
+## Raport z realizacji projektu ReaderHub
 
 
 Niniejszy dokument stanowi podsumowanie mojego wkładu w rozwój aplikacji BookVerse, realizowanej we współpracy z Igorem, odpowiedzialnym za warstwę frontendową. Moje zadania skupiały się na architekturze backendowej (Node.js/Express), zarządzaniu bazą danych (SQLite), wdrażaniu aplikacji na środowisko produkcyjne (Render) oraz nadzorze nad spójnością repozytorium Git.
 
-🛠 Zakres zrealizowanych zadań
+## Zakres zrealizowanych zadań
 Projektowanie i adaptacja API: Opracowałem logikę serwerową, zapewniając elastyczność i kompatybilność odpowiedzi API z wymaganiami komponentów React.
 
 Konfiguracja środowiska produkcyjnego (Deploy): Wdrożyłem aplikację na platformę Render, gwarantując jej stabilną i ciągłą dostępność w sieci.
@@ -49,7 +49,7 @@ Zarządzanie relacyjną bazą danych: Odpowiadałem za architekturę SQLite, opt
 
 
 
-🤯 Rozwiązane problemy architektoniczne
+## Rozwiązane problemy architektoniczne
 1. Niespójność formatów danych (Obiekty vs Tablice)
 Początkowo API zostało zaprojektowane zgodnie z dobrymi praktykami REST, zwracając dane w strukturyzowanych obiektach (np. { sukces: true, dane: [...] }). Aplikacja kliencka oczekiwała jednak czystych tablic, co prowadziło do błędu Uncaught TypeError: e.filter is not a function. Aby uniknąć konieczności głębokiego refaktoryzowania kodu frontendowego, zmodyfikowałem formatowanie odpowiedzi po stronie serwera, dostosowując je bezpośrednio do wymagań interfejsu.
 
@@ -65,5 +65,5 @@ Po wdrożeniu na środowisko produkcyjne (Render), serwer Node.js nie potrafił 
 5. Utrzymanie spójności migracji SQLite między środowiskami
 Zaobserwowałem, że API na środowisku produkcyjnym nie zapisywało danych w polu nowej kategorii. Analiza wykazała niespójność schematów bazy danych: plik z bazą na serwerze Render nie posiadał najnowszej migracji DDL (brak kolumny category), która została już wdrożona na środowisku lokalnym. Rozwiązałem ten problem, wymuszając aktualizację schematu strukturalnego bezpośrednio na maszynie produkcyjnej, przywracając pełną zgodność środowisk.
 
-🎯 Podsumowanie
+## Podsumowanie
 Realizacja tego projektu była wysoce wartościowym doświadczeniem inżynierskim. Kluczowym wnioskiem z procesu wytwórczego jest zrozumienie, że z perspektywy dostarczenia produktu (MVP), racjonalnym krokiem jest elastyczna rezygnacja z zaawansowanych funkcjonalności (jak autoryzacja JWT) na rzecz stabilnego i w pełni zintegrowanego systemu. Osiągnięty kompromis oraz systematyczne rozwiązywanie problemów synchronizacyjnych pozwoliły na dostarczenie wydajnej, spójnej i poprawnie działającej aplikacji.
