@@ -1,3 +1,37 @@
+# projekt BookVerse
+
+W projekcie BookVerse odpowiadałem głównie za rozwój części frontendowej aplikacji. Moim zadaniem było stworzenie przejrzystego interfejsu użytkownika oraz zapewnienie poprawnej komunikacji pomiędzy frontendem a backendem.
+
+## Zakres wykonanych prac
+
+* Tworzenie i rozwój widoków aplikacji w React
+* Implementacja strony głównej z listą książek
+* Implementacja strony szczegółów książki
+* Stworzenie formularza dodawania nowych książek
+* Implementacja wyszukiwania książek po tytule i autorze
+* Implementacja sortowania książek
+* Dodanie obsługi kategorii książek po stronie interfejsu użytkownika
+* Wyświetlanie danych pobieranych z API
+* Testowanie działania aplikacji
+* Współpraca przy integracji frontendu z backendem
+* Rozwiązywanie problemów związanych z pobieraniem i wyświetlaniem danych
+
+## Największe wyzwania
+
+Największym wyzwaniem było połączenie frontendu z backendem oraz dostosowanie aplikacji do zmian wprowadzanych podczas rozwoju projektu. W trakcie pracy konieczne było testowanie komunikacji z API, poprawianie błędów oraz dostosowywanie interfejsu do nowych funkcjonalności.
+
+## Czego się nauczyłem
+
+Praca nad projektem pozwoliła mi lepiej poznać React, React Router, pracę z REST API oraz współpracę zespołową przy użyciu Git i GitHub. Zdobyłem również doświadczenie w analizowaniu błędów i rozwiązywaniu problemów pojawiających się podczas tworzenia aplikacji internetowych.
+
+## Podsumowanie
+
+Udział w projekcie pozwolił mi zdobyć praktyczne doświadczenie w tworzeniu nowoczesnych aplikacji webowych. Dzięki współpracy z partnerem udało się stworzyć funkcjonalną aplikację do zarządzania i przeglądania książek.
+## Ihor Kaniuk
+
+
+
+
 Cześć! To mój raport z tego, jak razem z Igorem (moim partnerem od frontendu) poskładaliśmy ten projekt w całość. To było niezłe wyzwanie, w którym odpowiadałem za backend (Node.js/Express), bazę danych SQLite, wdrożenie (deploy) na platformę Render, a także za to, żeby nasze gałęzie w Git w końcu się dogadały i projekt zadziałał jako jedna spójna aplikacja.
 
 🛠 Co dokładnie zrobiłem
@@ -32,3 +66,4 @@ Zauważyłem, że API na środowisku produkcyjnym ignorowało zapisywanie jednej
 
 🎯 Podsumowanie
 To było niesamowicie pouczające doświadczenie. Najważniejsza lekcja, jaką wyciągnąłem: czasami dla sukcesu projektu o wiele lepiej jest zrezygnować ze skomplikowanej funkcji (jak autoryzacja JWT), aby dowieźć w 100% działający produkt, niż mieć masę idealnego kodu serwerowego, który całkowicie blokuje pracę frontendu. Znaleźliśmy świetny kompromis, pokonaliśmy problemy z synchronizacją, a nasza aplikacja działa teraz szybko i stabilnie!
+
