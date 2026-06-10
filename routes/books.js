@@ -5,23 +5,23 @@
  *
  * Trasy i ochrona (Etap 6):
  *
- *   PUBLICZNE (bez tokenu):
- *     GET  /api/books                    – lista wszystkich książek
- *     GET  /api/books/:id                – szczegóły książki
- *     GET  /api/books/:id/comments       – komentarze do książki
+ * PUBLICZNE (bez tokenu):
+ * GET  /api/books                    – lista wszystkich książek
+ * GET  /api/books/:id                – szczegóły książki
+ * GET  /api/books/:id/comments       – komentarze do książki
  *
- *   ZALOGOWANY UŻYTKOWNIK (verifyToken):
- *     POST /api/books/:id/comments       – dodaj komentarz
- *     POST /api/books/:id/rating         – dodaj ocenę
+ * ZALOGOWANY UŻYTKOWNIK (verifyToken):
+ * POST /api/books/:id/comments       – dodaj komentarz
+ * POST /api/books/:id/rating         – dodaj ocenę
  *
- *   TYLKO ADMIN (verifyToken + requireAdmin):
- *     POST   /api/books                  – dodaj książkę
- *     PUT    /api/books/:id              – edytuj książkę
- *     DELETE /api/books/:id              – usuń książkę
+ * TYLKO ADMIN (verifyToken + requireAdmin):
+ * POST   /api/books                  – dodaj książkę
+ * PUT    /api/books/:id              – edytuj książkę
+ * DELETE /api/books/:id              – usuń książkę
  *
  * Zmiana w komentarzach (Etap 6):
- *   author_name jest teraz pobierany z tokenu (req.user.username),
- *   a nie z treści żądania — pole author_name w body jest ignorowane.
+ * author_name jest teraz pobierany z tokenu (req.user.username),
+ * a nie z treści żądania — pole author_name w body jest ignorowane.
  *
  * Wszystkie komunikaty klienckie są w języku polskim.
  * ─────────────────────────────────────────────────────────────────
@@ -52,8 +52,8 @@ function parseId(raw) {
 
 function fetchAverageRating(db, bookId) {
   const row = db
-    .prepare("SELECT ROUND(AVG(rating), 1) AS avg FROM ratings WHERE book_id = ?")
-    .get(bookId);
+      .prepare("SELECT ROUND(AVG(rating), 1) AS avg FROM ratings WHERE book_id = ?")
+      .get(bookId);
   return row.avg !== null ? row.avg : null;
 }
 
@@ -68,21 +68,19 @@ function attachAverageRating(db, book) {
 
 // ─────────────────────────────────────────────────────────────────
 // GET /api/books  [publiczny]
+// Zwraca CZYSTĄ tablicę książek (żeby frontendowy .filter() działał)
 // ─────────────────────────────────────────────────────────────────
 router.get("/", (req, res, next) => {
   try {
     const db = getDb();
 
     const books = db
-      .prepare("SELECT * FROM Books ORDER BY id DESC")
-      .all()
-      .map((book) => attachAverageRating(db, book));
+        .prepare("SELECT * FROM Books ORDER BY id DESC")
+        .all()
+        .map((book) => attachAverageRating(db, book));
 
-    return res.status(200).json({
-      sukces: true,
-      liczba: books.length,
-      dane:   books,
-    });
+    // Zwracamy czystą tablicę
+    return res.status(200).json(books);
   } catch (err) {
     next(err);
   }
@@ -90,6 +88,7 @@ router.get("/", (req, res, next) => {
 
 // ─────────────────────────────────────────────────────────────────
 // GET /api/books/:id  [publiczny]
+// Zwraca CZYSTY obiekt książki
 // ─────────────────────────────────────────────────────────────────
 router.get("/:id", (req, res, next) => {
   try {
@@ -114,7 +113,8 @@ router.get("/:id", (req, res, next) => {
 
     attachAverageRating(db, book);
 
-    return res.status(200).json({ sukces: true, dane: book });
+    // Zwracamy czysty obiekt
+    return res.status(200).json(book);
   } catch (err) {
     next(err);
   }
@@ -142,25 +142,22 @@ router.post("/", verifyToken, requireAdmin, (req, res, next) => {
     }
 
     const result = db
-      .prepare("INSERT INTO Books (title, description, author, category) VALUES (?, ?, ?, ?)")
-      .run(
-        sanitize(title),
-        sanitize(description),
-        sanitize(author),
-        sanitize(category) ?? "Bez kategorii"
-      );
+        .prepare("INSERT INTO Books (title, description, author, category) VALUES (?, ?, ?, ?)")
+        .run(
+            sanitize(title),
+            sanitize(description),
+            sanitize(author),
+            sanitize(category) ?? "Bez kategorii"
+        );
 
     const newBook = db
-      .prepare("SELECT * FROM Books WHERE id = ?")
-      .get(result.lastInsertRowid);
+        .prepare("SELECT * FROM Books WHERE id = ?")
+        .get(result.lastInsertRowid);
 
     attachAverageRating(db, newBook);
 
-    return res.status(201).json({
-      sukces:    true,
-      komunikat: "Książka została pomyślnie dodana.",
-      dane:      newBook,
-    });
+    // Zwracamy czysty obiekt stworzonej książki
+    return res.status(201).json(newBook);
   } catch (err) {
     next(err);
   }
@@ -207,11 +204,7 @@ router.put("/:id", verifyToken, requireAdmin, (req, res, next) => {
     const updatedBook = db.prepare("SELECT * FROM Books WHERE id = ?").get(id);
     attachAverageRating(db, updatedBook);
 
-    return res.status(200).json({
-      sukces:    true,
-      komunikat: "Książka została pomyślnie zaktualizowana.",
-      dane:      updatedBook,
-    });
+    return res.status(200).json(updatedBook);
   } catch (err) {
     next(err);
   }
@@ -219,7 +212,6 @@ router.put("/:id", verifyToken, requireAdmin, (req, res, next) => {
 
 // ─────────────────────────────────────────────────────────────────
 // DELETE /api/books/:id  [tylko admin]
-// Kaskadowo usuwa powiązane komentarze i oceny (ON DELETE CASCADE)
 // ─────────────────────────────────────────────────────────────────
 router.delete("/:id", verifyToken, requireAdmin, (req, res, next) => {
   try {
@@ -258,6 +250,7 @@ router.delete("/:id", verifyToken, requireAdmin, (req, res, next) => {
 
 // ─────────────────────────────────────────────────────────────────
 // GET /api/books/:id/comments  [publiczny]
+// Zwraca CZYSTĄ tablicę
 // ─────────────────────────────────────────────────────────────────
 router.get("/:id/comments", (req, res, next) => {
   try {
@@ -280,19 +273,16 @@ router.get("/:id/comments", (req, res, next) => {
     }
 
     const comments = db
-      .prepare(`
-        SELECT id, author_name, content, created_at
-        FROM   comments
-        WHERE  book_id = ?
-        ORDER  BY id DESC
-      `)
-      .all(id);
+        .prepare(`
+          SELECT id, author_name, content, created_at
+          FROM   comments
+          WHERE  book_id = ?
+          ORDER  BY id DESC
+        `)
+        .all(id);
 
-    return res.status(200).json({
-      sukces: true,
-      liczba: comments.length,
-      dane:   comments,
-    });
+    // Zwracamy czystą tablicę
+    return res.status(200).json(comments);
   } catch (err) {
     next(err);
   }
@@ -300,9 +290,6 @@ router.get("/:id/comments", (req, res, next) => {
 
 // ─────────────────────────────────────────────────────────────────
 // POST /api/books/:id/comments  [zalogowany użytkownik]
-//
-// Etap 6: author_name pochodzi z tokenu JWT (req.user.username),
-// a nie z treści żądania. Pole author_name w body jest ignorowane.
 // ─────────────────────────────────────────────────────────────────
 router.post("/:id/comments", verifyToken, (req, res, next) => {
   try {
@@ -333,22 +320,17 @@ router.post("/:id/comments", verifyToken, (req, res, next) => {
       });
     }
 
-    // author_name = nazwa z tokenu, nie z body
     const authorName = req.user.username;
 
     const result = db
-      .prepare("INSERT INTO comments (book_id, author_name, content) VALUES (?, ?, ?)")
-      .run(id, authorName, sanitize(content));
+        .prepare("INSERT INTO comments (book_id, author_name, content) VALUES (?, ?, ?)")
+        .run(id, authorName, sanitize(content));
 
     const newComment = db
-      .prepare("SELECT id, author_name, content, created_at FROM comments WHERE id = ?")
-      .get(result.lastInsertRowid);
+        .prepare("SELECT id, author_name, content, created_at FROM comments WHERE id = ?")
+        .get(result.lastInsertRowid);
 
-    return res.status(201).json({
-      sukces:    true,
-      komunikat: "Komentarz został pomyślnie dodany.",
-      dane:      newComment,
-    });
+    return res.status(201).json(newComment);
   } catch (err) {
     next(err);
   }
@@ -396,13 +378,9 @@ router.post("/:id/rating", verifyToken, (req, res, next) => {
     const averageRating = fetchAverageRating(db, id);
 
     return res.status(201).json({
-      sukces:    true,
-      komunikat: "Ocena została pomyślnie dodana.",
-      dane: {
-        book_id:        id,
-        twoja_ocena:    ratingNum,
-        average_rating: averageRating,
-      },
+      book_id:        id,
+      twoja_ocena:    ratingNum,
+      average_rating: averageRating,
     });
   } catch (err) {
     next(err);
