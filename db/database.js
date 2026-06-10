@@ -26,20 +26,21 @@ let db = null;
 // ─────────────────────────────────────────────────────────────────
 
 function initDatabase() {
-  db = new Database(DB_PATH, {
-    verbose: process.env.NODE_ENV === "development" ? console.log : undefined,
-  });
+    db = new Database(DB_PATH, {
+        verbose: process.env.NODE_ENV === "development" ? console.log : undefined,
+    });
 
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
+    db.pragma("journal_mode = WAL");
+    db.pragma("foreign_keys = ON");
 
-  _createTables();
-  _runMigrations();
+    _createTables();
+    _runMigrations();
+    _seedData(); //
 
-  console.log(`[DB] Połączono z bazą: ${DB_PATH}`);
-  console.log("[DB] Schemat zweryfikowany — wszystkie tabele gotowe.");
+    console.log(`[DB] Połączono z bazą: ${DB_PATH}`);
+    console.log("[DB] Schemat zweryfikowany — wszystkie tabele gotowe.");
 
-  return db;
+    return db;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -47,8 +48,8 @@ function initDatabase() {
 // ─────────────────────────────────────────────────────────────────
 
 function _createTables() {
-  // Etap 1 — Books (category dodawana migracją)
-  db.exec(`
+    // Etap 1 — Books (category dodawana migracją)
+    db.exec(`
     CREATE TABLE IF NOT EXISTS Books (
                                        id          INTEGER PRIMARY KEY AUTOINCREMENT,
                                        title       TEXT    NOT NULL,
@@ -59,8 +60,8 @@ function _createTables() {
       )
   `);
 
-  // Etap 4 — comments
-  db.exec(`
+    // Etap 4 — comments
+    db.exec(`
     CREATE TABLE IF NOT EXISTS comments (
                                           id          INTEGER PRIMARY KEY AUTOINCREMENT,
                                           book_id     INTEGER NOT NULL
@@ -72,8 +73,8 @@ function _createTables() {
       )
   `);
 
-  // Etap 5 — ratings
-  db.exec(`
+    // Etap 5 — ratings
+    db.exec(`
     CREATE TABLE IF NOT EXISTS ratings (
                                          id      INTEGER PRIMARY KEY AUTOINCREMENT,
                                          book_id INTEGER NOT NULL
@@ -89,16 +90,41 @@ function _createTables() {
 // ─────────────────────────────────────────────────────────────────
 
 function _runMigrations() {
-  const columns   = db.pragma("table_info(Books)");
-  const hasCategory = columns.some((col) => col.name === "category");
+    const columns   = db.pragma("table_info(Books)");
+    const hasCategory = columns.some((col) => col.name === "category");
 
-  if (!hasCategory) {
-    db.exec(`
+    if (!hasCategory) {
+        db.exec(`
       ALTER TABLE Books
         ADD COLUMN category TEXT NOT NULL DEFAULT 'Bez kategorii'
     `);
-    console.log("[DB] Migracja: dodano kolumnę 'category' do tabeli Books.");
-  }
+        console.log("[DB] Migracja: dodano kolumnę 'category' do tabeli Books.");
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Automatyczne zapełnianie bazy (Seeding)
+// ─────────────────────────────────────────────────────────────────
+function _seedData() {
+    // Sprawdzamy, czy w tabeli Books są już jakieś rekordy
+    const row = db.prepare("SELECT COUNT(*) AS count FROM Books").get();
+
+    if (row.count === 0) {
+        console.log("[DB] Baza danych jest pusta. Dodawanie początkowych książek...");
+
+        const insert = db.prepare(`
+      INSERT INTO Books (title, description, author, category)
+      VALUES (?, ?, ?, ?)
+    `);
+
+        // Dodajemy kilka książek z różnymi kategoriami, żeby aktywować listę rozwijaną
+        insert.run("Wiedźmin: Ostatnie życzenie", "Zbiór opowiadań o wiedźminie Geralcie.", "Andrzej Sapkowski", "Fantastyka");
+        insert.run("Sherlock Holmes: Studium w szkarłacie", "Klasyczna powieść detektywistyczna.", "Arthur Conan Doyle", "Kryminał");
+        insert.run("Diuna", "Klasyka literatury science fiction.", "Frank Herbert", "Sci-Fi");
+        insert.run("Duma i uprzedzenie", "Klasyczny romans obyczajowy.", "Jane Austen", "Romans");
+
+        console.log("[DB] Pomyślnie dodano dane początkowe.");
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -106,12 +132,12 @@ function _runMigrations() {
 // ─────────────────────────────────────────────────────────────────
 
 function getDb() {
-  if (!db) {
-    throw new Error(
-        "[DB] Baza danych nie została zainicjalizowana. Wywołaj najpierw initDatabase()."
-    );
-  }
-  return db;
+    if (!db) {
+        throw new Error(
+            "[DB] Baza danych nie została zainicjalizowana. Wywołaj najpierw initDatabase()."
+        );
+    }
+    return db;
 }
 
 module.exports = { initDatabase, getDb };
