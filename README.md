@@ -1,5 +1,5 @@
 # projekt BookVerse
-
+## Ihor Kaniuk
 W projekcie BookVerse odpowiadałem głównie za rozwój części frontendowej aplikacji. Moim zadaniem było stworzenie przejrzystego interfejsu użytkownika oraz zapewnienie poprawnej komunikacji pomiędzy frontendem a backendem.
 
 ## Zakres wykonanych prac
@@ -27,7 +27,7 @@ Praca nad projektem pozwoliła mi lepiej poznać React, React Router, pracę z R
 ## Podsumowanie
 
 Udział w projekcie pozwolił mi zdobyć praktyczne doświadczenie w tworzeniu nowoczesnych aplikacji webowych. Dzięki współpracy z partnerem udało się stworzyć funkcjonalną aplikację do zarządzania i przeglądania książek.
-## Ihor Kaniuk
+
 
 
 
