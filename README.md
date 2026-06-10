@@ -1,68 +1,43 @@
-📚 Katalog Książek (Klon LubimyCzytac) — Projekt Zaliczeniowy Vistula
-Cześć! To mój raport z tego, jak razem z Igorem (moim partnerem od frontendu) poskładaliśmy ten projekt w całość. To było niezłe wyzwanie, w którym odpowiadałem za backend (Node.js/Express), bazę danych SQLite, wdrożenie (deploy) na platformę Render, a także za to, żeby nasze gałęzie w Git w końcu się dogadały i projekt zadziałał jako jedna spójna aplikacja.
+#  BookVerse
 
-🛠 Co dokładnie zrobiłem
-Zaprojektowałem i dostosowałem API: Napisałem logikę serwera i elastycznie dopasowywałem odpowiedzi z backendu do tego, czego akurat potrzebował nasz React.
+BookVerse to aplikacja internetowa inspirowana serwisami do katalogowania książek, takimi jak LubimyCzytać. Projekt umożliwia przeglądanie książek, wyszukiwanie ich, filtrowanie według kategorii oraz wyświetlanie szczegółowych informacji o wybranej pozycji.
 
-Skonfigurowałem deploy: Wdrożyłem nasz serwer na platformę Render, zapewniając jego stabilne działanie w sieci.
-
-Połączyłem Express i React Router: Rozwiązałem problem routingu na serwerze, żeby frontend mógł bez problemu działać jako Single Page Application (brak błędów przy odświeżaniu strony).
-
-Rozwiązywałem konflikty w Git: Koordynowałem scalanie kodu (merge), ogarniałem zablokowane pliki bazy danych i synchronizowałem nasze środowiska pracy.
-
-Zarządzałem bazą danych: Odpowiadałem za architekturę SQLite, przeprowadzałem migracje tabel i synchronizowałem dane lokalne z bazą produkcyjną.
-
-😌 Co było najprostsze
-Najprostsze okazało się napisanie bazowego szkieletu serwera i podstawowych operacji CRUD dla książek. Logika dodawania, odczytu, usuwania i aktualizacji danych w SQLite za pomocą pakietu better-sqlite3 działała jak w zegarku od samego początku. Stworzenie bazy i jej podłączenie było najbardziej zrozumiałą i najszybszą częścią pracy, która dała nam świetny start.
-
-🤯 Z czym były problemy (i jak je rozwiązałem)
-1. Wojna formatów (Obiekty vs Tablice)
-Na początku skonfigurowałem backend "profesjonalnie": API zwracało odpowiedzi owinięte w obiekt { sukces: true, dane: [...] }. Okazało się jednak, że frontend Igora oczekiwał czystej tablicy i od razu odpalał na niej metodę .filter(). Przez to React wywalał błąd Uncaught TypeError: e.filter is not a function. Zamiast zmuszać Igora do przepisywania całego frontendu, po prostu dostosowałem format API i cofnąłem go do zwracania czystych tablic.
-
-2. Konflikty Git z plikami tymczasowymi SQLite
-Kiedy próbowałem pobrać kod Igora (git pull), Git twardo blokował scalanie. Powód? Tymczasowe pliki systemowe bazy danych (database.sqlite-shm i -wal), które tworzyły się automatycznie. Musiałem ukryć moje lokalne zmiany przez git stash, wymusić usunięcie tych plików w konsoli PowerShell (Remove-Item -Force) i dopiero wtedy bezpiecznie pobrać aktualizacje.
-
-3. Tymczasowe usunięcie warstwy JWT (Zarządzanie endpointami)
-Zbudowałem pełny system autoryzacji na backendzie: generowanie tokenów JWT, haszowanie haseł w bazie oraz middleware weryfikujący role (admin/user). Serwer działał zgodnie z założeniami i bezwzględnie blokował niezabezpieczone żądania HTTP błędem 401 Unauthorized. Żeby jednak nie zablokować testowania MVP przed zbliżającym się deadlinem, podjąłem decyzję o kontrolowanym rollbacku architektonicznym. Przebudowałem pliki server.js, books.js oraz schemat SQLite, zdejmując middleware weryfikujące z endpointów API. Zmieniłem logikę kontrolerów tak, by API tymczasowo obsługiwało wszystkie operacje CRUD jako publiczne.
-
-4. Konfiguracja routingu Express dla aplikacji SPA (Błąd "Cannot GET")
-Po wdrożeniu na serwer Render, środowisko produkcyjne Node.js nie potrafiło poprawnie obsłużyć bezpośrednich zapytań o ścieżki, które nie należały do API (np. /add-book). Wynikało to z faktu, że Express oczekiwał konkretnych endpointów i zwracał błąd 404. Naprawiłem to na poziomie logiki serwera, implementując tzw. "catch-all route" (app.get("*", ...)). Dzięki temu backend przechwytuje teraz każde nierozpoznane żądanie HTTP i prawidłowo serwuje plik wejściowy, zamiast wyrzucać błąd braku endpointu.
-
-5. Zarządzanie migracjami SQLite (Rozstrzał między środowiskami)
-Zauważyłem, że API na środowisku produkcyjnym ignorowało zapisywanie jednej z wartości przy tworzeniu nowych zasobów. Po analizie backendu zdiagnozowałem problem z niespójnością schematów bazy danych: plik database.sqlite działający na Renderze posiadał przestarzałą architekturę tabel (brakowało kolumny category), podczas gdy u mnie na localhoście migracja struktury DDL już dawno się wykonała. Naprawiłem to, wymuszając aktualizację schematu bazy bezpośrednio na serwerze produkcyjnym, dzięki czemu środowiska zostały zsynchronizowane.
-
-🎯 Podsumowanie
-To było niesamowicie pouczające doświadczenie. Najważniejsza lekcja, jaką wyciągnąłem: czasami dla sukcesu projektu o wiele lepiej jest zrezygnować ze skomplikowanej funkcji (jak autoryzacja JWT), aby dowieźć w 100% działający produkt, niż mieć masę idealnego kodu serwerowego, który całkowicie blokuje pracę frontendu. Znaleźliśmy świetny kompromis, pokonaliśmy problemy z synchronizacją, a nasza aplikacja działa teraz szybko i stabilnie!
-
-
-
-
-
-
-
-
-
-# BookVerse
-
-BookVerse to aplikacja internetowa do przeglądania i zarządzania książkami.
+---
 
 ## Funkcjonalności
 
-* Wyświetlanie wszystkich książek
-* Wyszukiwanie książek po tytule lub autorze
-* Sortowanie książek od najnowszych i najstarszych
-* Wyświetlanie szczegółów książki
+### Książki
+
+* Wyświetlanie listy wszystkich książek
+* Podgląd szczegółów książki
 * Dodawanie nowych książek
-* Wyświetlanie kategorii książek
+* Sortowanie książek (od najnowszych i najstarszych)
+* Wyszukiwanie książek po tytule i autorze
+
+### Kategorie
+
+* Przypisywanie kategorii do książek
+* Wyświetlanie kategorii na liście książek
+* Wyświetlanie kategorii w szczegółach książki
 * Filtrowanie książek według kategorii
 
-## Technologie
+### Backend
+
+* REST API oparte na Express.js
+* Baza danych SQLite
+* Operacje CRUD dla książek
+* Obsługa komentarzy i ocen
+* System użytkowników oraz autoryzacji JWT
+
+---
+
+## 🛠 Technologie
 
 ### Frontend
 
 * React
 * React Router
-* JavaScript
+* JavaScript (ES6+)
 * CSS
 
 ### Backend
@@ -70,36 +45,102 @@ BookVerse to aplikacja internetowa do przeglądania i zarządzania książkami.
 * Node.js
 * Express.js
 * SQLite
+* better-sqlite3
+* JWT (JSON Web Token)
+* bcryptjs
 
-## Struktura projektu
+### Narzędzia
 
-Aplikacja składa się z następujących stron:
+* Git
+* GitHub
+* Render
 
-* Home Page – lista wszystkich książek
-* Book Details Page – szczegóły wybranej książki
-* Add Book Page – dodawanie nowych książek
-* Authors Page – informacje o autorach
+---
 
-## Mój wkład w projekt
+##  Struktura aplikacji
 
-Podczas realizacji projektu zajmowałem się:
+### Home Page
 
-* Tworzeniem i rozwijaniem stron w React
-* Implementacją wyszukiwania książek
-* Implementacją sortowania książek
-* Wyświetlaniem kategorii książek
-* Dodaniem filtrowania według kategorii
-* Testowaniem komunikacji między frontendem i backendem
-* Naprawianiem błędów związanych z pobieraniem i wyświetlaniem danych
+Lista wszystkich książek wraz z wyszukiwaniem, sortowaniem i filtrowaniem.
 
-## Planowane funkcjonalności
+### Book Details Page
 
-* System komentarzy
-* System ocen książek
-* Logowanie użytkowników
+Szczegółowe informacje o książce, autorze, kategorii oraz dodatkowych danych.
+
+### Add Book Page
+
+Formularz dodawania nowych książek.
+
+### Authors Page
+
+Informacje o autorach książek.
+
+---
+
+##  Mój wkład (Frontend)
+
+Byłem odpowiedzialny głównie za warstwę frontendową aplikacji:
+
+* Tworzenie komponentów React
+* Implementację routingu w React Router
+* Stworzenie strony głównej z listą książek
+* Stworzenie strony szczegółów książki
+* Stworzenie formularza dodawania książek
+* Implementację wyszukiwania książek
+* Implementację sortowania książek
+* Implementację kategorii po stronie interfejsu użytkownika
+* Wyświetlanie danych pobieranych z API
+* Testowanie komunikacji frontend ↔ backend
+* Naprawianie błędów związanych z renderowaniem danych
+
+---
+
+##  Wkład partnera (Backend)
+
+Mój partner odpowiadał za część backendową projektu:
+
+* Projektowanie i implementację REST API
+* Tworzenie oraz konfigurację bazy danych SQLite
+* Implementację operacji CRUD
+* Tworzenie migracji bazy danych
+* Implementację systemu użytkowników
+* Implementację autoryzacji JWT
+* Zarządzanie rolami użytkowników (admin/user)
+* Wdrożenie aplikacji na platformę Render
+* Rozwiązywanie problemów związanych z Git oraz synchronizacją projektu
+
+---
+
+##  Największe wyzwania
+
+Podczas realizacji projektu napotkaliśmy kilka problemów:
+
+* Synchronizacja pracy frontendu i backendu
+* Konflikty Git podczas scalania zmian
+* Integracja React z REST API
+* Migracje bazy danych SQLite
+* Konfiguracja routingu dla aplikacji typu SPA
+* Zarządzanie środowiskiem lokalnym i produkcyjnym
+
+Dzięki współpracy udało się rozwiązać wszystkie kluczowe problemy i stworzyć działającą aplikację.
+
+---
+
+##  Możliwe dalsze rozszerzenia
+
+* Rozbudowany system komentarzy
+* Rozbudowany system ocen książek
+* Pełna integracja logowania i rejestracji użytkowników w interfejsie frontendowym
 * Panel administratora
-* Edycja i usuwanie książek
+* Edycja i usuwanie książek przez administratora
+* Zdjęcia okładek książek
+* Profile użytkowników
 
-## Kaniuk Ihor
+---
 
-Projekt studencki wykonany w ramach zajęć z programowania aplikacji internetowych.
+##  Autorzy
+
+Projekt został wykonany w ramach zajęć akademickich na Uniwersytecie Vistula.
+
+Frontend: Igor
+Backend: Partner projektu
