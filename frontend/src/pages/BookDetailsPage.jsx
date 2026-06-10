@@ -16,7 +16,8 @@ function BookDetailsPage() {
 
             const data = await getBookById(id);
 
-            setBook(data.data);
+
+            setBook(data);
 
         } catch (error) {
 
