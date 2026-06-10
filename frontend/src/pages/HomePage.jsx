@@ -14,15 +14,21 @@ function HomePage() {
 
         try {
 
-            const data = await getBooks();
+            const response = await getBooks();
 
-            console.log(data);
+            console.log('API RESPONSE:', response);
 
-            setBooks(data.data || data);
+            const booksArray = Array.isArray(response)
+                ? response
+                : response.data || response.dane || [];
+
+            setBooks(booksArray);
 
         } catch (error) {
 
             console.log(error);
+
+            setBooks([]);
 
         }
 
@@ -41,11 +47,11 @@ function HomePage() {
 
             return (
                 book.title
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(search) ||
 
                 book.author
-                    .toLowerCase()
+                    ?.toLowerCase()
                     .includes(search)
             );
 
@@ -75,7 +81,9 @@ function HomePage() {
                 type="text"
                 placeholder="Search by title or author..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) =>
+                    setSearchTerm(e.target.value)
+                }
                 className="search-input"
             />
 
@@ -112,10 +120,12 @@ function HomePage() {
                 <div className="books-grid">
 
                     {filteredBooks.map((book) => (
+
                         <BookCard
                             key={book.id}
                             book={book}
                         />
+
                     ))}
 
                 </div>

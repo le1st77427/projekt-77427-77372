@@ -14,6 +14,10 @@ function BookCard({ book }) {
           Author: {book.author}
         </p>
 
+        <p className="book-category">
+          Category: {book.category}
+        </p>
+
         <p className="book-description">
           {
             book.description.length > 120

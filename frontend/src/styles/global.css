@@ -388,3 +388,24 @@ body {
 .empty-state p {
   color: #bbbbbb;
 }
+.book-form select {
+  background-color: #222;
+  border: 1px solid #333;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.book-category {
+  color: #bbbbbb;
+
+  margin-bottom: 15px;
+}
+.book-category {
+  color: #bbbbbb;
+
+  font-size: 16px;
+
+  margin-bottom: 10px;
+}
