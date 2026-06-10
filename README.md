@@ -1,5 +1,6 @@
 # projekt BookVerse
-## Ihor Kaniuk
+## Ihor Kaniuk 77372
+## Oleksandr Zavoloka 77427
 W projekcie BookVerse odpowiadałem głównie za rozwój części frontendowej aplikacji. Moim zadaniem było stworzenie przejrzystego interfejsu użytkownika oraz zapewnienie poprawnej komunikacji pomiędzy frontendem a backendem.
 
 ## Zakres wykonanych prac
