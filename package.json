@@ -1,9 +1,4 @@
 {
-<<<<<<< HEAD
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "jsonwebtoken": "^9.0.3"
-=======
   "name": "projekt-77427-77372",
   "version": "1.0.0",
   "description": "Book catalogue REST API — semester project inspired by LubimyCzytać (MVP phase 1)",
@@ -21,13 +16,13 @@
   "author": "Oleksandr-Zavoloka-77427 & Ihor-Kaniuk-77372",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.3.0",
     "cors": "^2.8.5",
     "express": "^4.18.3",
-    "react-router-dom": "^7.16.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
->>>>>>> 8ea4878d9f6b2bc9bc86e41b0b3f255cfd8b7565
   }
 }
