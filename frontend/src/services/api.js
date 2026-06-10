@@ -38,3 +38,12 @@ export async function getBookById(id) {
 
   return data;
 }
+export async function getCategories() {
+  const response = await fetch(`${API_URL}/categories/all`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch categories');
+  }
+
+  return response.json();
+}

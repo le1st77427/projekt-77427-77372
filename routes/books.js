@@ -79,6 +79,26 @@ router.get("/", (req, res, next) => {
 // GET /api/books/:id
 // Zwraca czysty obiekt jednej książki
 // ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
+// GET /api/books/categories/all
+// Zwraca unikalne kategorie z bazy danych
+// ─────────────────────────────────────────────────────────────────
+router.get("/categories/all", (req, res, next) => {
+  try {
+    const db = getDb();
+
+    // Pobieramy tylko unikalne wartości kategorii, ignorując puste
+    const rows = db.prepare("SELECT DISTINCT category FROM Books WHERE category IS NOT NULL").all();
+
+    // Zmieniamy format na prostą tablicę stringów
+    const categories = rows.map((row) => row.category);
+
+    return res.status(200).json(categories);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/:id", (req, res, next) => {
   try {
     const db = getDb();
