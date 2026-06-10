@@ -1,9 +1,2 @@
 node_modules/
 .idea/
-
-database.sqlite-shm
-database.sqlite-wal
-
-frontend/node_modules/
-
-.env

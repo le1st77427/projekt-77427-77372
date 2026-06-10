@@ -1,16 +1,21 @@
 /**
  * server.js
- * ---------------------------------------------------------------
- * Main entry point for the Book Catalogue REST API.
+ * ─────────────────────────────────────────────────────────────────
+ * Punkt wejścia aplikacji REST API — Katalog Książek.
  *
- * Startup sequence:
- *   1. Load environment configuration (PORT, NODE_ENV).
- *   2. Initialise the SQLite database & verify the schema.
- *   3. Configure Express middleware (CORS, JSON parsing, static files).
- *   4. Mount API routes.
- *   5. Register the global error handler.
- *   6. Start listening.
- * ---------------------------------------------------------------
+ * Zmienne środowiskowe (utwórz plik .env w katalogu głównym):
+ *   PORT        – numer portu (domyślnie: 3000)
+ *   NODE_ENV    – 'development' | 'production' (domyślnie: 'development')
+ *   JWT_SECRET  – sekret do podpisywania tokenów JWT  ← WYMAGANE w prod
+ *
+ * Kolejność startowa:
+ *   1. Wczytaj zmienne środowiskowe
+ *   2. Inicjalizuj bazę danych + schemat
+ *   3. Skonfiguruj middleware Express
+ *   4. Zamontuj routery
+ *   5. Globalny handler błędów
+ *   6. Uruchom nasłuchiwanie
+ * ─────────────────────────────────────────────────────────────────
  */
 
 "use strict";
@@ -21,91 +26,87 @@ const path     = require("path");
 
 const { initDatabase } = require("./db/database");
 const booksRouter      = require("./routes/books");
+const authRouter       = require("./routes/auth");       // ← Etap 6
 
-// ----------------------------------------------------------------
-// 1. Configuration
-// ----------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Konfiguracja
+// ─────────────────────────────────────────────────────────────────
+
 const PORT     = process.env.PORT     || 3000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-// ----------------------------------------------------------------
-// 2. Database initialisation
-//    Must happen before any request can be handled.
-// ----------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Inicjalizacja bazy
+// ─────────────────────────────────────────────────────────────────
+
 initDatabase();
 
-// ----------------------------------------------------------------
-// 3. Express application setup
-// ----------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Aplikacja Express
+// ─────────────────────────────────────────────────────────────────
+
 const app = express();
 
-// --- CORS ---
-// Allows requests from any origin so the frontend team can run their
-// HTML files from a different port (e.g., Live Server on 5500)
-// without browser policy errors.
-//
-// In production you would restrict this to specific origins:
-//   app.use(cors({ origin: "https://your-frontend-domain.com" }));
+// CORS — zezwól na żądania z dowolnego origin (dev)
+// W produkcji ogranicz do konkretnej domeny frontendu:
+//   app.use(cors({ origin: "https://twoja-domena.pl" }));
 app.use(cors());
 
-// --- Body parsing ---
-// Parse incoming request bodies with Content-Type: application/json
+// Parsowanie JSON
 app.use(express.json());
 
-// --- Static files ---
-// The frontend team drops their HTML/CSS/JS files inside ./public
-// and they are served automatically by Express at the root URL.
-// e.g., ./public/index.html  →  http://localhost:3000/
+// Pliki statyczne frontendu
 app.use(express.static(path.join(__dirname, "public")));
 
-// ----------------------------------------------------------------
-// 4. API Routes
-// ----------------------------------------------------------------
-app.use("/api/books", booksRouter);
+// ─────────────────────────────────────────────────────────────────
+// Routery API
+// ─────────────────────────────────────────────────────────────────
 
-// Catch-all for undefined API routes — returns a JSON 404
-// so clients always receive JSON rather than an HTML error page.
+app.use("/api/books", booksRouter);
+app.use("/api/auth",  authRouter);   // ← Etap 6: rejestracja i logowanie
+
+// Fallback dla nieistniejących tras API
 app.use("/api/*", (_req, res) => {
   res.status(404).json({
-    success: false,
-    message: "API endpoint not found. Please check the URL and HTTP method.",
+    sukces:    false,
+    komunikat: "Endpoint API nie istnieje. Sprawdź adres URL i metodę HTTP.",
   });
 });
 
-// ----------------------------------------------------------------
-// 5. Global error handler
-//    Any route that calls next(err) lands here.
-//    Keeps stack traces out of production responses.
-// ----------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Globalny handler błędów
+// ─────────────────────────────────────────────────────────────────
+
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
-  console.error("[ERROR]", err);
+  console.error("[BŁĄD]", err);
 
   const statusCode = err.statusCode || 500;
-  const message =
+  const komunikat  =
     NODE_ENV === "production"
-      ? "An unexpected server error occurred."
+      ? "Wystąpił nieoczekiwany błąd serwera."
       : err.message;
 
   res.status(statusCode).json({
-    success: false,
-    message,
-    ...(NODE_ENV !== "production" && { stack: err.stack }),
+    sukces: false,
+    komunikat,
+    ...(NODE_ENV !== "production" && { stos: err.stack }),
   });
 });
 
-// ----------------------------------------------------------------
-// 6. Start server
-// ----------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────
+// Start
+// ─────────────────────────────────────────────────────────────────
+
 app.listen(PORT, () => {
-  console.log("─────────────────────────────────────────────");
-  console.log(" 📚  Book Catalogue API  —  MVP Phase 1");
-  console.log("─────────────────────────────────────────────");
-  console.log(` 🌍  Environment : ${NODE_ENV}`);
-  console.log(` 🚀  Server      : http://localhost:${PORT}`);
-  console.log(` 📂  Static      : http://localhost:${PORT}/`);
-  console.log(` 🔌  Books API   : http://localhost:${PORT}/api/books`);
-  console.log("─────────────────────────────────────────────");
+  console.log("─────────────────────────────────────────────────────");
+  console.log("  📚  Katalog Książek API  —  Etap 6: Autoryzacja");
+  console.log("─────────────────────────────────────────────────────");
+  console.log(`  🌍  Środowisko  : ${NODE_ENV}`);
+  console.log(`  🚀  Serwer      : http://localhost:${PORT}`);
+  console.log(`  🔑  Auth API    : http://localhost:${PORT}/api/auth`);
+  console.log(`  📖  Books API   : http://localhost:${PORT}/api/books`);
+  console.log("─────────────────────────────────────────────────────");
 });
 
-module.exports = app; // exported for potential future testing
+module.exports = app;

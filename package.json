@@ -16,10 +16,11 @@
   "author": "Oleksandr-Zavoloka-77427 & Ihor-Kaniuk-77372",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.3.0",
     "cors": "^2.8.5",
     "express": "^4.18.3",
-    "react-router-dom": "^7.16.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
