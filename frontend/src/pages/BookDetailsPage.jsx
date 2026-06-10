@@ -38,7 +38,11 @@ function BookDetailsPage() {
 
             <div className="container">
 
-                <h1>Loading...</h1>
+                <div className="book-details">
+
+                    <h2>Loading book...</h2>
+
+                </div>
 
             </div>
 
@@ -50,29 +54,55 @@ function BookDetailsPage() {
 
         <div className="container">
 
-            <h1 className="page-title">
-                {book.title}
-            </h1>
+            <div className="book-details">
 
-            <h2 className="book-author">
-                {book.author}
-            </h2>
+                <h1 className="page-title">
+                    📖 {book.title}
+                </h1>
 
-            <p className="book-description">
-                {book.description}
-            </p>
+                <h3>
+                    👤 Author
+                </h3>
 
-            <br />
+                <p className="book-author">
+                    {book.author}
+                </p>
 
-            <p>
-                Created: {
-                new Date(
-                    book.created_at
-                ).toLocaleDateString(
-                    'uk-UA'
-                )
-            }
-            </p>
+                <br />
+
+                <h3>
+                    🏷️ Category
+                </h3>
+
+                <p className="book-category">
+                    {book.category}
+                </p>
+
+                <br />
+
+                <h3>
+                    📝 Description
+                </h3>
+
+                <p className="book-description">
+                    {book.description}
+                </p>
+
+                <br />
+
+                <h3>
+                    📅 Created
+                </h3>
+
+                <p>
+                    {new Date(
+                        book.created_at
+                    ).toLocaleDateString(
+                        'uk-UA'
+                    )}
+                </p>
+
+            </div>
 
         </div>
 

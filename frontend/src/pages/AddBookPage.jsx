@@ -7,6 +7,7 @@ function AddBookPage() {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('Fantasy');
 
   const [successMessage, setSuccessMessage] =
       useState('');
@@ -37,6 +38,7 @@ function AddBookPage() {
         title,
         author,
         description,
+        category,
       });
 
       setSuccessMessage(
@@ -46,6 +48,7 @@ function AddBookPage() {
       setTitle('');
       setAuthor('');
       setDescription('');
+      setCategory('Fantasy');
 
     } catch (error) {
 
@@ -100,6 +103,29 @@ function AddBookPage() {
                   setAuthor(e.target.value)
               }
           />
+
+          <select
+              value={category}
+              onChange={(e) =>
+                  setCategory(e.target.value)
+              }
+          >
+            <option value="Fantasy">
+              Fantasy
+            </option>
+
+            <option value="History">
+              History
+            </option>
+
+            <option value="Science">
+              Science
+            </option>
+
+            <option value="Programming">
+              Programming
+            </option>
+          </select>
 
           <textarea
               placeholder="Description"
