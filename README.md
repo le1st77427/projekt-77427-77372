@@ -33,3 +33,73 @@ Zauważyłem, że API na środowisku produkcyjnym ignorowało zapisywanie jednej
 
 🎯 Podsumowanie
 To było niesamowicie pouczające doświadczenie. Najważniejsza lekcja, jaką wyciągnąłem: czasami dla sukcesu projektu o wiele lepiej jest zrezygnować ze skomplikowanej funkcji (jak autoryzacja JWT), aby dowieźć w 100% działający produkt, niż mieć masę idealnego kodu serwerowego, który całkowicie blokuje pracę frontendu. Znaleźliśmy świetny kompromis, pokonaliśmy problemy z synchronizacją, a nasza aplikacja działa teraz szybko i stabilnie!
+
+
+
+
+
+
+
+
+
+# BookVerse
+
+BookVerse to aplikacja internetowa do przeglądania i zarządzania książkami.
+
+## Funkcjonalności
+
+* Wyświetlanie wszystkich książek
+* Wyszukiwanie książek po tytule lub autorze
+* Sortowanie książek od najnowszych i najstarszych
+* Wyświetlanie szczegółów książki
+* Dodawanie nowych książek
+* Wyświetlanie kategorii książek
+* Filtrowanie książek według kategorii
+
+## Technologie
+
+### Frontend
+
+* React
+* React Router
+* JavaScript
+* CSS
+
+### Backend
+
+* Node.js
+* Express.js
+* SQLite
+
+## Struktura projektu
+
+Aplikacja składa się z następujących stron:
+
+* Home Page – lista wszystkich książek
+* Book Details Page – szczegóły wybranej książki
+* Add Book Page – dodawanie nowych książek
+* Authors Page – informacje o autorach
+
+## Mój wkład w projekt
+
+Podczas realizacji projektu zajmowałem się:
+
+* Tworzeniem i rozwijaniem stron w React
+* Implementacją wyszukiwania książek
+* Implementacją sortowania książek
+* Wyświetlaniem kategorii książek
+* Dodaniem filtrowania według kategorii
+* Testowaniem komunikacji między frontendem i backendem
+* Naprawianiem błędów związanych z pobieraniem i wyświetlaniem danych
+
+## Planowane funkcjonalności
+
+* System komentarzy
+* System ocen książek
+* Logowanie użytkowników
+* Panel administratora
+* Edycja i usuwanie książek
+
+## Kaniuk Ihor
+
+Projekt studencki wykonany w ramach zajęć z programowania aplikacji internetowych.
