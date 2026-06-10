@@ -77,7 +77,7 @@ Informacje o autorach książek.
 
 ---
 
-##  Mój wkład (Frontend)
+##  Ihor Kaniuk (Frontend)
 
 Byłem odpowiedzialny głównie za warstwę frontendową aplikacji:
 
@@ -95,7 +95,7 @@ Byłem odpowiedzialny głównie za warstwę frontendową aplikacji:
 
 ---
 
-##  Wkład partnera (Backend)
+##  oleksandr zavoloka (Backend)
 
 Mój partner odpowiadał za część backendową projektu:
 
